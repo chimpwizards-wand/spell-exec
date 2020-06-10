@@ -21,6 +21,7 @@
     "@chimpwizards/wand": "@chimpwizards/wand"
   },
   "dependencies": {
+    "@chimpwizards/wand": "file:../../cli/dist",
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "clear": "^0.1.0",
