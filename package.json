@@ -1,5 +1,5 @@
 {
-  "name": "@chimpwizard-wand/spell-hello",
+  "name": "@chimpwizard-wand/spell-exec",
   "version": "2.0.0-1",
   "description": "Magic happens everywhere",
   "main": "index.js",
@@ -17,11 +17,9 @@
   },
   "author": "ndru@chimpwizard.com",
   "license": "MIT",
-
   "peerDependencies": {
-    "@chimpwizards/wand": "file:../../cli/dist"
+    "@chimpwizards/wand": "@chimpwizards/wand"
   },
-
   "dependencies": {
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
@@ -33,7 +31,6 @@
     "reflect-metadata": "^0.1.13",
     "yargs": "^15.3.1"
   },
-  
   "devDependencies": {
     "@types/clear": "^0.1.0",
     "@types/debug": "^4.1.5",

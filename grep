@@ -1,0 +1,4 @@
+
+.: EXECUTING ls -la -- 10
+.: 'ls -la -- 10' exited with code: Error: Command failed: ls -la -- 10
+Exec 10 !!!

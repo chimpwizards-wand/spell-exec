@@ -1,1 +1,1 @@
-export * from './commands/Hello';
+export * from './commands/Exec';
