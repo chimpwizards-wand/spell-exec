@@ -62,7 +62,7 @@ export class Shell extends Command  {
         const context = config.load()
 
         const bar = new progress.SingleBar({
-            format: 'Installing core dependencies |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || Installing: {depencency}',
+            format: 'Installing core dependencies |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || Processing: {depencency}',
             barCompleteChar: '\u2588',
             barIncompleteChar: '\u2591',
             hideCursor: true
