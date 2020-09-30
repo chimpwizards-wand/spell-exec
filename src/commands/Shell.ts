@@ -4,8 +4,10 @@ import { Config } from '@chimpwizards/wand'
 import { Execute } from '@chimpwizards/wand'
 import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/index'
 import * as _ from 'lodash';  
+import * as path from 'path';
 
-const chalk = require('chalk');
+const progress = require('cli-progress');
+const chalk = require('chalk')
 const debug = Debug("w:cli:shell");
 
 @CommandDefinition({ 
@@ -30,6 +32,9 @@ export class Shell extends Command  {
     @CommandParameter({ description: 'Include dependencies folders', defaults: true})
     dependencies: boolean = true;
 
+    @CommandParameter({ description: 'Show more inforamtion about the execution', defaults: false})
+    verbose: boolean = false;    
+
     @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', defaults: '*'})
     filter: string = "*";
 
@@ -53,17 +58,34 @@ export class Shell extends Command  {
                 .replace("!!","|")
         }
 
+        const config = new Config();
+        const context = config.load()
+
+        const bar = new progress.SingleBar({
+            format: 'Installing core dependencies |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || Installing: {depencency}',
+            barCompleteChar: '\u2588',
+            barIncompleteChar: '\u2591',
+            hideCursor: true
+        });
+
+        bar.start((this.dependencies?context.dependencies.length:0) + (this.root?1:0), 0, {
+            depencency: "Preparing..."
+        });
+
         //Execute on Root
         if (this.root) {
             debug(`Execute command on root`)
-            executer.run({cmd: cmd})
+            executer.run({ 
+                cmd: cmd, 
+                folder: context.local.root, 
+                output: this.verbose 
+            })
+            bar.increment({depencency: context.local.root});
         }
         // _.each(config.components||[], (component, name) => {
         //Execut for each package
         if (this.dependencies) {
             debug(`Execute command on dependencies`)
-            const config = new Config();
-            const context = config.load()
             let self = this;
             debug(`CONFIG ${JSON.stringify(context)}`)
             if(context) {
@@ -78,11 +100,20 @@ export class Shell extends Command  {
                     }
                     if (doit) {
                         debug(`EXECUTING (${name}): ${cmd}`)
-                        executer.run({folder:pack.path, cmd: cmd})
+                        bar.increment({depencency: pack.path});
+                        executer.run( {
+                            cmd: cmd, 
+                            folder: path.join(context.local.root, pack.path), 
+                            output: this.verbose
+                        })
                     }
                 });
             }
+
+
         }
+
+        bar.stop();
     }
 
 }
