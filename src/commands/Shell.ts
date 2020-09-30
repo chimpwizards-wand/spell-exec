@@ -18,7 +18,7 @@ const debug = Debug("w:cli:shell");
         [`shell --filter hello-world pwd`, `execute the "pwd" command on the packages's name matching "hello-world"`],
     ]
 })
-export class Exec extends Command  { 
+export class Shell extends Command  { 
 
     @CommandArgument({ description: 'Command to execute', name: 'shell-command'})
     @CommandParameter({ description: 'Command to execute', alias: 'c'})
@@ -27,10 +27,10 @@ export class Exec extends Command  {
     @CommandParameter({ description: 'Include root folder', defaults: true})
     root: boolean = true;
 
-    @CommandParameter({ description: 'Include packages folders', defaults: true})
-    packages: boolean = true;
+    @CommandParameter({ description: 'Include dependencies folders', defaults: true})
+    dependencies: boolean = true;
 
-    @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed'})
+    @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', defaults: '*'})
     filter: string = "*";
 
 
@@ -54,17 +54,20 @@ export class Exec extends Command  {
         }
 
         //Execute on Root
-        if (this.root) executer.run({cmd: cmd})
-
+        if (this.root) {
+            debug(`Execute command on root`)
+            executer.run({cmd: cmd})
+        }
         // _.each(config.components||[], (component, name) => {
         //Execut for each package
-        if (this.packages) {
+        if (this.dependencies) {
+            debug(`Execute command on dependencies`)
             const config = new Config();
             const context = config.load()
             let self = this;
             debug(`CONFIG ${JSON.stringify(context)}`)
             if(context) {
-                _.each(context.packages||[], (pack, name) => {
+                _.each(context.dependencies||[], (pack, name) => {
                     let doit: boolean = true;
                     if (self.filter != "*") {
                         debug(`FIND packages that incldues ${self.filter}`)
@@ -73,7 +76,10 @@ export class Exec extends Command  {
                             doit = true;
                         }
                     }
-                    if (doit) executer.run({folder:pack.path, cmd: cmd})
+                    if (doit) {
+                        debug(`EXECUTING (${name}): ${cmd}`)
+                        executer.run({folder:pack.path, cmd: cmd})
+                    }
                 });
             }
         }
@@ -83,7 +89,7 @@ export class Exec extends Command  {
 
 export function register ():any {
     debug(`Registering....`)
-    let command = new Exec();
+    let command = new Shell();
     debug(`INIT: ${JSON.stringify(Object.getOwnPropertyNames(command))}`)
 
     return command.build()
