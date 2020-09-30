@@ -38,6 +38,9 @@ export class Shell extends Command  {
     @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', defaults: '*'})
     filter: string = "*";
 
+    @CommandParameter({ description: 'Tag(s) to use to filter components. if several are provided it will be use with AND condition'})
+    tags: string = "";
+
 
     execute(yargs: any): void {
         debug(`Exec ${this.command}`)
@@ -47,7 +50,7 @@ export class Shell extends Command  {
         const args = process.argv.slice(3);
         debug(`ARGS ${JSON.stringify(args)}`)
        
-
+        let self = this;
         const executer = new Execute();
         
         let cmd = this.command;
@@ -58,61 +61,94 @@ export class Shell extends Command  {
                 .replace("!!","|")
         }
 
+        const cwd = process.cwd();
         const config = new Config();
         const context = config.load()
+        debug(`CONFIG: ${context}`)
 
         const bar = new progress.SingleBar({
-            format: 'Processing |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || {depencency}',
+            format: 'Processing |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || {dependency}',
             barCompleteChar: '\u2588',
             barIncompleteChar: '\u2591',
             hideCursor: true
         });
 
-        bar.start((this.dependencies?context.dependencies.length:0) + (this.root?1:0), 1, {
-            depencency: "root"
-        });
+        let dependencies = []
 
-        //Execute on Root
+        //Add root
         if (this.root) {
-            debug(`Execute command on root`)
-            executer.run({ 
+            debug(`Execute command on dependencies`)
+            dependencies.push({ 
                 cmd: cmd, 
                 folder: context.local.root, 
-                output: this.verbose 
+                output: this.verbose,
+                dependency: "root",
+                tags: []
             })
         }
-        // _.each(config.components||[], (component, name) => {
-        //Execut for each package
+
+        //Add dependencies
         if (this.dependencies) {
-            debug(`Execute command on dependencies`)
-            let self = this;
-            debug(`CONFIG ${JSON.stringify(context)}`)
             if(context) {
                 _.each(context.dependencies||[], (pack, name) => {
-                    let doit: boolean = true;
-                    if (self.filter != "*") {
-                        debug(`FIND packages that incldues ${self.filter}`)
-                        var matcher = new RegExp(self.filter ,"gi");
-                        if (matcher.test(name)) {
-                            doit = true;
-                        }
-                    }
-                    if (doit) {
-                        debug(`EXECUTING (${name}): ${cmd}`)
-                        executer.run( {
-                            cmd: cmd, 
-                            folder: path.join(context.local.root, pack.path), 
-                            output: this.verbose
-                        })
-
-                        bar.increment({depencency: pack.path});
-
-                    }
-                });
+                    dependencies.push({ 
+                        cmd: cmd, 
+                        folder: path.join(context.local.root, pack.path), 
+                        output: this.verbose,
+                        dependency: pack.path,
+                        tags: pack.tags
+                    })
+                })
             }
-
-
         }
+
+        //Filter by tags if rovided
+        if (this.tags.length>0) {
+            let tmp: any = []
+            let query = self.tags.split(",")
+            _.each(dependencies, (pack, name) => {
+                let diff = _.difference(query, pack.tags)
+                if ( diff.length == 0) {
+                    tmp.push(pack)
+                }
+            })
+            dependencies = tmp;
+        }
+
+        //Filter by filter/regexpr
+        if (this.filter != "*") {
+            let tmp: any = []
+            var matcher = new RegExp(this.filter ,"gi");
+
+            _.each(dependencies, (pack, name) => {
+                if (matcher.test(pack.dependency)) {
+                    tmp.push(pack)
+                }
+            })
+            dependencies = tmp;
+        }
+
+
+        bar.start(dependencies.length, 1, {
+            dependency: "Preparing"
+        });
+        
+        debug(`CONFIG ${JSON.stringify(context)}`)
+        _.each(dependencies, (pack, name) => {
+            debug(`EXECUTING (${name}): ${cmd}`)
+            executer.run( {
+                cmd: cmd, 
+                folder: pack.folder, 
+                output: this.verbose
+            })
+
+            bar.increment({dependency: pack.dependency});
+
+        });
+        
+
+
+        
 
         bar.stop();
     }
