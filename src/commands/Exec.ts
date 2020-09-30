@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { Command } from  '@chimpwizards/wand'
 import { Config } from '@chimpwizards/wand'
 import { Execute } from '@chimpwizards/wand'
-import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command'
+import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/'
 import * as _ from 'lodash';  
 
 const chalk = require('chalk');
