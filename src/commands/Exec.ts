@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { Command } from  '@chimpwizards/wand'
 import { Config } from '@chimpwizards/wand'
 import { Execute } from '@chimpwizards/wand'
-import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/index'
+import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command'
 import * as _ from 'lodash';  
 
 const chalk = require('chalk');
@@ -67,7 +67,7 @@ export class Exec extends Command  {
                 _.each(context.packages||[], (pack, name) => {
                     let doit: boolean = true;
                     if (self.filter != "*") {
-                        debug(`FIND oackages that incldues ${self.filter}`)
+                        debug(`FIND packages that incldues ${self.filter}`)
                         var matcher = new RegExp(self.filter ,"gi");
                         if (matcher.test(name)) {
                             doit = true;

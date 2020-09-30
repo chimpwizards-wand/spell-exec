@@ -1,17 +1,17 @@
 {
-  "name": "@chimpwizard-wand/spell-exec",
-  "version": "2.0.0-1",
+  "name": "@chimpwizards-wand/spell-exec",
+  "version": "2.0.1",
   "description": "Magic happens everywhere",
   "main": "index.js",
   "scripts": {
     "test": "",
-    "build": "echo $PWD && echo `date +%R\\ ` \"Building package...\" && rm -rf ./dist/* && mkdir -p ./dist && npx tsc &&  rsync -ra ./src/ ./dist --exclude='*.ts' && cp package.json ./dist && echo \"package build done...\"",
+    "build": "echo $PWD && echo `date +%R\\ ` \"Building package...\" && rm -rf ./dist/* && mkdir -p ./dist && npx tsc &&  rsync -ra ./src/ ./dist --exclude='*.ts' && cp package.json ./dist && cp README.md ./dist && echo \"package build done...\"",
     "deploy": "npm run build; cd dist && npm pack | xargs npm i -g",
     "postinstall": ""
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm version prerelease",
+      "pre-push": "npm version patch",
       "pre-commit": "npm test"
     }
   },
