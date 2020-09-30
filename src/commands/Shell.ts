@@ -118,10 +118,12 @@ export class Shell extends Command  {
         //Filter by filter/regexpr
         if (this.filter != "*") {
             let tmp: any = []
-            var matcher = new RegExp(this.filter ,"gi");
-
+            
             _.each(dependencies, (pack, name) => {
-                if (matcher.test(pack.dependency)) {
+                debug(`Marching: ${pack.dependency}`)
+                var matcher = new RegExp(this.filter ,"gi");
+                let test = matcher.test(pack.dependency);
+                if (test) {
                     tmp.push(pack)
                 }
             })
@@ -129,7 +131,7 @@ export class Shell extends Command  {
         }
 
 
-        bar.start(dependencies.length, 1, {
+        bar.start(dependencies.length, 0, {
             dependency: "Preparing"
         });
         
