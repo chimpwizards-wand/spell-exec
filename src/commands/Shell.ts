@@ -62,14 +62,14 @@ export class Shell extends Command  {
         const context = config.load()
 
         const bar = new progress.SingleBar({
-            format: 'Installing core dependencies |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || Processing: {depencency}',
+            format: 'Processing |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || {depencency}',
             barCompleteChar: '\u2588',
             barIncompleteChar: '\u2591',
             hideCursor: true
         });
 
-        bar.start((this.dependencies?context.dependencies.length:0) + (this.root?1:0), 0, {
-            depencency: "Preparing..."
+        bar.start((this.dependencies?context.dependencies.length:0) + (this.root?1:0), 1, {
+            depencency: "root"
         });
 
         //Execute on Root
@@ -80,7 +80,6 @@ export class Shell extends Command  {
                 folder: context.local.root, 
                 output: this.verbose 
             })
-            bar.increment({depencency: context.local.root});
         }
         // _.each(config.components||[], (component, name) => {
         //Execut for each package
@@ -100,12 +99,14 @@ export class Shell extends Command  {
                     }
                     if (doit) {
                         debug(`EXECUTING (${name}): ${cmd}`)
-                        bar.increment({depencency: pack.path});
                         executer.run( {
                             cmd: cmd, 
                             folder: path.join(context.local.root, pack.path), 
                             output: this.verbose
                         })
+
+                        bar.increment({depencency: pack.path});
+
                     }
                 });
             }
