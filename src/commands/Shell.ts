@@ -121,7 +121,7 @@ export class Shell extends Command  {
             
             _.each(dependencies, (pack, name) => {
                 debug(`Marching: ${pack.dependency}`)
-                var matcher = new RegExp(this.filter ,"gi");
+                var matcher = new RegExp(self.filter ,"gi");
                 let test = matcher.test(pack.dependency);
                 if (test) {
                     tmp.push(pack)
