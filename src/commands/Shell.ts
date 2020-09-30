@@ -2,25 +2,25 @@ import Debug from 'debug';
 import { Command } from  '@chimpwizards/wand'
 import { Config } from '@chimpwizards/wand'
 import { Execute } from '@chimpwizards/wand'
-import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/'
+import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/index'
 import * as _ from 'lodash';  
 
 const chalk = require('chalk');
-const debug = Debug("w:cli:exec");
+const debug = Debug("w:cli:shell");
 
 @CommandDefinition({ 
     description: 'Execute a command across all packages/components',
     alias: 'x',
     examples: [
-        [`exec 'git commit -am "Update changes"'`, `Execute "git commit.." command in all packages folders`],
-        [`exec --- git commit -am "Update changes"`, `Execute "git commit.." command in all packages folders`],
-        [`exec --no-root 'ls -la'`, `Execute "ls -la" command except on the root folder`],
-        [`exec --filter hello-world pwd`, `execute the "pwd" command on the packages's name matching "hello-world"`],
+        [`shell 'git commit -am "Update changes"'`, `Execute "git commit.." command in all packages folders`],
+        [`shell --- git commit -am "Update changes"`, `Execute "git commit.." command in all packages folders`],
+        [`shell --no-root 'ls -la'`, `Execute "ls -la" command except on the root folder`],
+        [`shell --filter hello-world pwd`, `execute the "pwd" command on the packages's name matching "hello-world"`],
     ]
 })
 export class Exec extends Command  { 
 
-    @CommandArgument({ description: 'Command to execute', name: 'exec-command'})
+    @CommandArgument({ description: 'Command to execute', name: 'shell-command'})
     @CommandParameter({ description: 'Command to execute', alias: 'c'})
     command: string = '';
 

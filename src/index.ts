@@ -1,1 +1,1 @@
-export * from './commands/Exec';
+export * from './commands/Shell';
