@@ -63,7 +63,7 @@ export class Shell extends Command  {
 
         const cwd = process.cwd();
         const config = new Config();
-        const context = config.load()
+        const context = config.load({})
         debug(`CONFIG: ${context}`)
 
         const bar = new progress.SingleBar({
