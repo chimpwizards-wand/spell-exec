@@ -42,6 +42,9 @@ export class Shell extends Command  {
     tags: string = "";
 
 
+    @CommandParameter({ description: 'Execute command in current folder', defaults: false})
+    current: boolean = false;
+
     execute(yargs: any): void {
         debug(`Exec ${this.command}`)
         debug(`THIS ${JSON.stringify(this)}`)
@@ -86,30 +89,41 @@ export class Shell extends Command  {
 
         let dependencies = []
 
-        //Add root
-        if (this.root) {
-            debug(`Execute command on dependencies`)
+        if ( this.current) {
+            debug(`Execute command on current folder`)
             dependencies.push({ 
                 cmd: cmd, 
-                folder: context.local.root, 
+                folder: process.cwd(), 
                 output: this.verbose,
-                dependency: "root",
+                dependency: "current",
                 tags: []
             })
-        }
-
-        //Add dependencies
-        if (this.dependencies) {
-            if(context) {
-                _.each(context.dependencies||[], (pack, name) => {
-                    dependencies.push({ 
-                        cmd: cmd, 
-                        folder: path.join(context.local.root, pack.path), 
-                        output: this.verbose,
-                        dependency: pack.path,
-                        tags: pack.tags
-                    })
+        } else {
+            //Add root
+            if (this.root) {
+                debug(`Execute command on dependencies`)
+                dependencies.push({ 
+                    cmd: cmd, 
+                    folder: context.local.root, 
+                    output: this.verbose,
+                    dependency: "root",
+                    tags: []
                 })
+            }
+
+            //Add dependencies
+            if (this.dependencies) {
+                if(context) {
+                    _.each(context.dependencies||[], (pack, name) => {
+                        dependencies.push({ 
+                            cmd: cmd, 
+                            folder: path.join(context.local.root, pack.path), 
+                            output: this.verbose,
+                            dependency: pack.path,
+                            tags: pack.tags
+                        })
+                    })
+                }
             }
         }
 
