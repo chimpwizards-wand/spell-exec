@@ -52,19 +52,30 @@ export class Shell extends Command  {
        
         let self = this;
         const executer = new Execute();
-        
+
+        const cwd = process.cwd();
+        const config: any = new Config();
+        const context = config.load({})
+        debug(`CONFIG: ${context}`)
+
         let cmd = this.command;
 
-        if (args.join(" ").indexOf("---")>=0) {
+        debug(`Check if command is a already registered command`)
+        if ( context.scripts && context.scripts[this.command]) {
+            cmd = path.join(context.local.root,context.scripts[this.command])
+        }
+
+        //Attach the rest of the command. Assuming no quotes were used eg: '<command'
+        let wholething = args.join(" ");
+        if (wholething.indexOf("---")>=0) {
             cmd = args.join(" ").substring(args.join(" ").indexOf("---")+4)
                 .replace("::","|")
                 .replace("!!","|")
         }
 
-        const cwd = process.cwd();
-        const config = new Config();
-        const context = config.load({})
-        debug(`CONFIG: ${context}`)
+        let rest = wholething.substring(wholething.indexOf(this.command)+this.command.length)
+        cmd = cmd + rest
+
 
         const bar = new progress.SingleBar({
             format: 'Processing |' + chalk.cyan('{bar}') + '| {percentage}% || {value}/{total} Dependencies || {dependency}',
