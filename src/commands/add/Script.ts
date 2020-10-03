@@ -16,7 +16,7 @@ const debug = Debug("w:cli:shell:script");
     alias: 'x',
     parent: 'add',  //TODO: Get the parent from the folder structure
     examples: [
-        [`add script ./scripts/new-release.sh`, `Link new-release.sh script to the cli`],
+        [`add script ./scripts/hello.sh`, `Link hello.sh script to the cli`],
     ]
 })
 export class Script extends Command  { 

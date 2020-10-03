@@ -18,6 +18,8 @@ const debug = Debug("w:cli:shell");
         [`shell --- git commit -am "Update changes"`, `Execute "git commit.." command in all packages folders`],
         [`shell --no-root 'ls -la'`, `Execute "ls -la" command except on the root folder`],
         [`shell --filter hello-world pwd`, `execute the "pwd" command on the packages's name matching "hello-world"`],
+        [`shell --current 'ls -la'`, `Execute "ls -la" command only in current folder`],
+        [`shell git status`, `Execute "git status" command (notice that no need to use " around the command)`],
     ]
 })
 export class Shell extends Command  { 
