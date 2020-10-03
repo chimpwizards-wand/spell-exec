@@ -99,6 +99,8 @@ export class Shell extends Command  {
                 tags: []
             })
         } else {
+            debug(`Current flag disable. Check the other two options`)
+
             //Add root
             if (this.root) {
                 debug(`Execute command on dependencies`)
