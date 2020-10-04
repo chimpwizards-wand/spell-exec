@@ -5,6 +5,7 @@ import { Execute } from '@chimpwizards/wand'
 import { CommandDefinition, CommandParameter, CommandArgument } from '@chimpwizards/wand/commons/command/index'
 import * as _ from 'lodash';  
 import * as path from 'path';
+import * as fs from 'fs';
 
 const progress = require('cli-progress');
 const chalk = require('chalk')
@@ -65,10 +66,25 @@ export class Shell extends Command  {
 
         let cmd = this.command;
 
-        debug(`Check if command is a already registered command`)
         if ( context.scripts && context.scripts[this.command]) {
+            debug(`Command is registered inside .wand/config`)
             cmd = path.join(context.local.root,context.scripts[this.command])
+        } else {
+            debug(`Command is registered inside package.json`)
+            let packagePath = path.join(
+                context.local.root,
+                'package.json'
+            ) 
+            if ( fs.existsSync(packagePath) ) {
+                let info = require(packagePath);
+                if (info && info.scripts) {
+                    if (info.scripts[this.command]) {
+                        cmd = info.scripts[this.command]
+                    }
+                }
+            }
         }
+
 
         //Attach the rest of the command. Assuming no quotes were used eg: '<command'
         let wholething = args.join(" ");
