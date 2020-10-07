@@ -7,7 +7,7 @@ const debug = Debug("w:cli:config");
 
 @CommandDefinition({ 
     alias: 's',
-    parent: "shell",
+    //parent: "shell",
     description: 'Script management'
 })
 export class Script extends Command  { 
