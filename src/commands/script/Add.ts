@@ -13,7 +13,7 @@ const debug = Debug("w:cli:shell:script");
 
 @CommandDefinition({ 
     description: 'Link external shell script to the cli',
-    alias: 's',
+    alias: 'a',
     parent: 'script',  //TODO: Get the parent from the folder structure
     examples: [
         [`w shell script add ./scripts/hello.sh`, `Link hello.sh script to the cli`],
