@@ -13,13 +13,13 @@ const debug = Debug("w:cli:shell:script");
 
 @CommandDefinition({ 
     description: 'Link external shell script to the cli',
-    alias: 'x',
-    parent: 'add',  //TODO: Get the parent from the folder structure
+    alias: 's',
+    parent: 'script',  //TODO: Get the parent from the folder structure
     examples: [
-        [`add script ./scripts/hello.sh`, `Link hello.sh script to the cli`],
+        [`w shell script add ./scripts/hello.sh`, `Link hello.sh script to the cli`],
     ]
 })
-export class Script extends Command  { 
+export class Add extends Command  { 
 
     @CommandArgument({ description: 'Script location', required: true})
     path: string = "";
@@ -42,7 +42,7 @@ export class Script extends Command  {
 
 export function register ():any {
     debug(`Registering....`)
-    let command = new Script();
+    let command = new Add();
     debug(`INIT: ${JSON.stringify(Object.getOwnPropertyNames(command))}`)
 
     return command.build()
