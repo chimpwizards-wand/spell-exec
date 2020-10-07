@@ -44,6 +44,9 @@ export class Shell extends Command  {
     @CommandParameter({ description: 'Tag(s) to use to filter components. if several are provided it will be use with AND condition', alias: 't',})
     tags: string = "";
 
+    @CommandParameter({ description: 'Include private components', alias: 'p', defaults: false})
+    includePrivates: boolean = false;  
+
 
     @CommandParameter({ description: 'Execute command in current folder', alias: 'c', defaults: false})
     current: boolean = false;
@@ -135,13 +138,22 @@ export class Shell extends Command  {
             if (this.dependencies) {
                 if(context) {
                     _.each(context.dependencies||[], (pack, name) => {
-                        dependencies.push({ 
-                            cmd: cmd, 
-                            folder: path.join(context.local.root, pack.path), 
-                            output: this.verbose,
-                            dependency: pack.path,
-                            tags: pack.tags
-                        })
+                        let add: boolean = false;
+                        if (!pack.visibility || _.lowerCase(pack.visibility) == "public") {
+                            add = true;
+                        } 
+                        if (pack.visibility && _.lowerCase(pack.visibility) == "private" && this.includePrivates) {
+                            add = true;
+                        }
+                        if (add) {
+                            dependencies.push({ 
+                                cmd: cmd, 
+                                folder: path.join(context.local.root, pack.path), 
+                                output: this.verbose,
+                                dependency: pack.path,
+                                tags: pack.tags
+                            })
+                        }
                     })
                 }
             }
