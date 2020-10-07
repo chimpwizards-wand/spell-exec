@@ -15,7 +15,7 @@ export class Script extends Command  {
     execute(yargs: any): void {
         debug(`Do Nothing`)
         const executer = new Execute();
-        let cmd = `w w dependency --help`;
+        let cmd = `w script --help`;
         executer.run({cmd: cmd, showLog: false})
     } 
 
