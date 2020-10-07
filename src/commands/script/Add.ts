@@ -24,7 +24,7 @@ export class Add extends Command  {
     @CommandArgument({ description: 'Script location', required: true})
     path: string = "";
 
-    @CommandParameter({ description: 'Script name'})
+    @CommandParameter({ description: 'Script name', alias: 'n',})
     name: string= "";  
 
     execute(yargs: any): void {

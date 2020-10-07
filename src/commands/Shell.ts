@@ -26,26 +26,26 @@ const debug = Debug("w:cli:shell");
 export class Shell extends Command  { 
 
     @CommandArgument({ description: 'Command to execute', name: 'shell-command'})
-    @CommandParameter({ description: 'Command to execute', alias: 'c'})
+    @CommandParameter({ description: 'Command to execute', alias: 'x'})
     command: string = '';
 
-    @CommandParameter({ description: 'Include root folder', defaults: true})
+    @CommandParameter({ description: 'Include root folder', alias: 'r', defaults: true})
     root: boolean = true;
 
-    @CommandParameter({ description: 'Include dependencies folders', defaults: true})
+    @CommandParameter({ description: 'Include dependencies folders', alias: 'd', defaults: true})
     dependencies: boolean = true;
 
-    @CommandParameter({ description: 'Show more inforamtion about the execution', defaults: false})
+    @CommandParameter({ description: 'Show more inforamtion about the execution', alias: 'v', defaults: false})
     verbose: boolean = false;    
 
-    @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', defaults: '*'})
+    @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', alias: 'f',defaults: '*'})
     filter: string = "*";
 
-    @CommandParameter({ description: 'Tag(s) to use to filter components. if several are provided it will be use with AND condition'})
+    @CommandParameter({ description: 'Tag(s) to use to filter components. if several are provided it will be use with AND condition', alias: 't',})
     tags: string = "";
 
 
-    @CommandParameter({ description: 'Execute command in current folder', defaults: false})
+    @CommandParameter({ description: 'Execute command in current folder', alias: 'c', defaults: false})
     current: boolean = false;
 
     execute(yargs: any): void {
