@@ -51,6 +51,9 @@ export class Shell extends Command  {
     @CommandParameter({ description: 'Execute command in current folder', alias: 'c', defaults: false})
     current: boolean = false;
 
+    @CommandParameter({ description: 'Number of jobs to run in parallel', alias: 'j', defaults: 1})
+    jobs: number = 1; 
+
     execute(yargs: any): void {
         debug(`Exec ${this.command}`)
         debug(`THIS ${JSON.stringify(this)}`)
@@ -192,6 +195,7 @@ export class Shell extends Command  {
             dependency: "Preparing"
         });
         
+        //TODO: Add parallelism support
         debug(`CONFIG ${JSON.stringify(context)}`)
         _.each(dependencies, (pack, name) => {
             debug(`EXECUTING (${name}): ${cmd}`)
