@@ -85,6 +85,10 @@ export class Shell extends Command  {
                 if (scriptConfiguration.current) {
                     this.current = scriptConfiguration.current
                 }
+                if (scriptConfiguration.verbose) {
+                    this.verbose = scriptConfiguration.verbose
+                }
+
             }
             
         } else {

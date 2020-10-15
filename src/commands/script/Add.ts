@@ -27,8 +27,11 @@ export class Add extends Command  {
     @CommandParameter({ description: 'Script name', alias: 'n',})
     name: string= "";  
 
-    @CommandParameter({ description: 'Execute command just in current folder', alias: 'c', defaults: false})
+    @CommandParameter({ description: 'Set command to run just in current folder', alias: 'c', defaults: false})
     current: boolean = false;
+
+    @CommandParameter({ description: 'Set command to be verbose by default', alias: 'v', defaults: false})
+    verbose: boolean = false;  
 
     execute(yargs: any): void {
         var config = new Config();
@@ -43,6 +46,10 @@ export class Add extends Command  {
         if ( this.current ) {
             scripts.scripts[name]['current'] = this.current
         }
+
+        if ( this.verbose ) {
+            scripts.scripts[name]['verbose'] = this.verbose
+        }        
         
         var newConfig = _.merge({}, context, scripts);
         config.save({context: newConfig})
