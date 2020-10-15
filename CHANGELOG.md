@@ -8,6 +8,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Enable execution in parallel
 
-## [2.0.27] - 10.15.2020
+## [2.0.29] - 10.15.2020
 
 - Allow to configure new added script to be executed just on current fodler instead to run it across all dependencies
+- Add additional flag to turn off/on progress bar
+- Add additional flag specify the number of parallel jobs to use

@@ -38,6 +38,9 @@ export class Shell extends Command  {
     @CommandParameter({ description: 'Show more inforamtion about the execution', alias: 'v', defaults: false})
     verbose: boolean = false;    
 
+    @CommandParameter({ description: 'Show progress bar', alias: 'b', defaults: true})
+    progressBar: boolean = true;  
+
     @CommandParameter({ description: 'Filter Package/Component name ising this filter/search criteria where the command will be executed', alias: 'f',defaults: '*'})
     filter: string = "*";
 
@@ -199,10 +202,11 @@ export class Shell extends Command  {
             dependencies = tmp;
         }
 
-
-        bar.start(dependencies.length, 0, {
-            dependency: "Preparing"
-        });
+        if ( this.progressBar) {
+            bar.start(dependencies.length, 0, {
+                dependency: "Preparing"
+            });
+        }
         
         //TODO: Add parallelism support
         debug(`CONFIG ${JSON.stringify(context)}`)
@@ -214,15 +218,16 @@ export class Shell extends Command  {
                 output: this.verbose
             })
 
-            bar.increment({dependency: pack.dependency});
+            if ( this.progressBar) {
+                bar.increment({dependency: pack.dependency});
+            }
 
         });
         
 
-
-        
-
-        bar.stop();
+        if ( this.progressBar) {
+            bar.stop();
+        }
     }
 
 }
