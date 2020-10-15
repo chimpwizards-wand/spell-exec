@@ -74,7 +74,16 @@ export class Shell extends Command  {
 
         if ( context.scripts && context.scripts[this.command]) {
             debug(`Command is registered inside .wand/config`)
-            cmd = path.join(context.local.root,context.scripts[this.command])
+            let scriptConfiguration: any = context.scripts[this.command]
+            if ( typeof(scriptConfiguration) == "string" ) {
+                cmd = path.join(context.local.root,scriptConfiguration)
+            } else {
+                cmd = path.join(context.local.root,scriptConfiguration.command)
+                if (scriptConfiguration.current) {
+                    this.current = scriptConfiguration.current
+                }
+            }
+            
         } else {
             debug(`Command is registered inside package.json`)
             let packagePath = path.join(

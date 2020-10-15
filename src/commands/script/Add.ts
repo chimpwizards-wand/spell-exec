@@ -27,13 +27,23 @@ export class Add extends Command  {
     @CommandParameter({ description: 'Script name', alias: 'n',})
     name: string= "";  
 
+    @CommandParameter({ description: 'Execute command just in current folder', alias: 'c', defaults: false})
+    current: boolean = false;
+
     execute(yargs: any): void {
         var config = new Config();
         var context = config.load({});
         var scripts : any= { scripts: {}}
 
         let name: string = this.name || this.path.split("/").reverse()[0].split(".")[0]
-        scripts.scripts[name] = this.path
+        scripts.scripts[name] = {
+            command: this.path,
+        }
+
+        if ( this.current ) {
+            scripts.scripts[name]['current'] = this.current
+        }
+        
         var newConfig = _.merge({}, context, scripts);
         config.save({context: newConfig})
     }
