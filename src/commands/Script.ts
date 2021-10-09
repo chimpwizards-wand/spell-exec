@@ -8,7 +8,7 @@ const debug = Debug("w:cli:config");
 @CommandDefinition({ 
     alias: 's',
     //parent: "shell",
-    description: 'Script management'
+    description: 'Add/Remove new reusable script into the configuration'
 })
 export class Script extends Command  { 
 
