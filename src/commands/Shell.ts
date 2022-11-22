@@ -59,7 +59,7 @@ export class Shell extends Command  {
 
     execute(yargs: any): void {
         debug(`Exec ${this.command}`)
-        debug(`THIS ${JSON.stringify(this)}`)
+        //debug(`THIS ${JSON.stringify(this)}`); //Generates ciclical exeption
         debug(`YARGS ${JSON.stringify(yargs)}`)
 
         const args = process.argv.slice(3);
